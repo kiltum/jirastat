@@ -48,4 +48,4 @@ They can get from ENV, as options of from jirastat.{json,yaml.toml} file from lo
 
 ## Example picture from Excel
 
-![alt text](raw/master/pic.png)
+![alt text](https://raw.githubusercontent.com/kiltum/jirastat/master/pic.png)
