@@ -1,8 +1,8 @@
 # Jira Statistic data generator
 
-I meet to problem that common JIRA report "Created vs Resolved Issues Report" to simple for my needs.
+Common JIRA report "Created vs Resolved Issues Report" not feet my needs.
 
-But I  need "Created vs {STATUS} Issues Report".
+I need "Created vs {STATUS} Issues Report" instead. But JIRA does not give me such instruments
 
 So here is very simple Go program to do this job. 
 
