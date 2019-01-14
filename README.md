@@ -13,7 +13,7 @@ _Compiled jirastat in repo - for OS X_
 Set environment variables or command line options and run. You will get something like this:
 
 ```
-JS_APSS=pass ./jirastat --js_host https://atlassin.net --js_user admin
+JS_PASS=pass JS_CUMULATIVE=no ./jirastat --js_host https://atlassin.net --js_user admin
 
 Date	Created	Updated
 -----------------------
