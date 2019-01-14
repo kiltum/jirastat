@@ -4,7 +4,9 @@ I meet to problem that common JIRA report "Created vs Resolved Issues Report" to
 
 But I  need "Created vs {STATUS} Issues Report".
 
-So here is very simple Go program to do this job
+So here is very simple Go program to do this job. 
+
+_Compiled jirastat in repo - for OS X_
 
 ## Usage
 
