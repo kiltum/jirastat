@@ -7,6 +7,8 @@ import (
 	"github.com/spf13/pflag"
 	"github.com/spf13/viper"
 	"log"
+	"sort"
+	"strconv"
 	"strings"
 	"time"
 )
@@ -21,7 +23,9 @@ func main() {
 	flag.String("js_host", "", "JIRA endpoint")
 	flag.String("js_user", "", "Username")
 	flag.String("js_pass", "", "Password")
-	flag.String("js_project", "IT", "Password")
+	flag.String("js_project", "IT", "Short project name")
+	flag.String("js_status", "DONE", "Which status threat as DONE")
+	flag.String("js_days", "30", "How many days use for report")
 	flag.String("js_verb", "no", "Be verbose? Yes/No")
 
 	pflag.CommandLine.AddGoFlagSet(flag.CommandLine)
@@ -44,6 +48,15 @@ func main() {
 
 	if viper.GetString("js_pass") == "" {
 		log.Fatalln("js_pass cannot be empty")
+	}
+
+	if viper.GetString("js_project") == "" {
+		log.Fatalln("js_project cannot be empty")
+	}
+
+	days, errd := strconv.Atoi(viper.GetString("js_days"))
+	if errd != nil {
+		log.Fatalf("js_days (%s) cannot be converted", viper.GetString("js_days"))
 	}
 
 	if viper.GetString("js_project") == "" {
@@ -94,7 +107,8 @@ func main() {
 	}
 	// project="Infrastructure Tasks" and updatedDate>-30d order by updated DESC
 	// createdDate
-	err = client.Issue.SearchPages(fmt.Sprintf(`project=%s and updatedDate>-10d`, strings.TrimSpace("IT")), nil, appendFunc)
+
+	err = client.Issue.SearchPages(fmt.Sprintf(`project=%s and updatedDate>-%dd`, viper.GetString("js_project"), days), nil, appendFunc)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -115,14 +129,28 @@ func main() {
 
 		cre[created] = cre[created] + 1
 
-		upd[updated] = upd[updated] + 1
+		if strings.ToLower(viper.GetString("js_status")) == strings.ToLower(i.Fields.Status.Name) {
+			upd[updated] = upd[updated] + 1
+		}
 
-		fmt.Printf("Issue Key: %s %s/%s\nIssue Summary: %s\nStatus: %s\n\n", i.Key, created, updated, i.Fields.Summary, i.Fields.Status.Name)
+		if verb == "yes" {
+			fmt.Printf("%s Open: %s Updated: %s Summary: %s Status: %s\n", i.Key, created, updated, i.Fields.Summary, i.Fields.Status.Name)
+		}
 
 	}
+	if verb == "yes" {
+		fmt.Println("Date\tCreated\tUpdated")
+		fmt.Println("-----------------------")
+	}
 
-	for k, v := range cre {
-		fmt.Printf("%s\t%d\t%d\n", k, v, upd[k])
+	var keys []string
+	for k := range upd {
+		keys = append(keys, k)
+	}
+	sort.Strings(keys)
+
+	for _, v := range keys {
+		fmt.Printf("%s\t%d\t%d\n", v, cre[v], upd[v])
 	}
 
 }
