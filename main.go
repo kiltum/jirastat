@@ -26,6 +26,7 @@ func main() {
 	flag.String("js_project", "IT", "Short project name")
 	flag.String("js_status", "DONE", "Which status threat as DONE")
 	flag.String("js_days", "30", "How many days use for report")
+	flag.String("js_cumulative", "yes", "Cumulative Totals?")
 	flag.String("js_verb", "no", "Be verbose? Yes/No")
 
 	pflag.CommandLine.AddGoFlagSet(flag.CommandLine)
@@ -37,6 +38,8 @@ func main() {
 	}
 
 	verb := strings.ToLower(viper.GetString("js_verb"))
+
+	cum := strings.ToLower(viper.GetString("js_cumulative"))
 
 	if verb == "yes" {
 		log.Printf("Will use %s as jira endpoint\n", viper.GetString("js_host"))
@@ -149,8 +152,20 @@ func main() {
 	}
 	sort.Strings(keys)
 
+	cre_p := 0 // previous values for cimulative
+	upd_p := 0
+
 	for _, v := range keys {
-		fmt.Printf("%s\t%d\t%d\n", v, cre[v], upd[v])
+		if cum != "yes" {
+			fmt.Printf("%s\t%d\t%d\n", v, cre[v], upd[v])
+		} else {
+
+			cre_p = cre_p + cre[v]
+
+			upd_p = upd_p + upd[v]
+			fmt.Printf("%s\t%d\t%d\n", v, cre_p, upd_p)
+		}
+
 	}
 
 }
