@@ -2,16 +2,16 @@
 
 I meet to problem that common JIRA report "Created vs Resolved Issues Report" to simple for my needs.
 
-I need to create same report, but bases on Task Status, not on resolved.
+But I  need "Created vs {STATUS} Issues Report".
 
-So here is very simple Go program to do this
+So here is very simple Go program to do this job
 
 ## Usage
 
-Set variables or command line options and run. You will get something like this:
+Set environment variables or command line options and run. You will get something like this:
 
 ```
-./jirastat --js_host https://atlassin.net --js_user admin --js_pass admin
+JS_APSS=pass ./jirastat --js_host https://atlassin.net --js_user admin
 
 Date	Created	Updated
 -----------------------
@@ -30,9 +30,7 @@ Date	Created	Updated
 
 Now you can simple copy and paste to excel (or other) and make any graph you need. For your purpose i already create simple book.xls
 
-## Variables
-
-They can get from ENV, as options of from jirastat.{json,yaml.toml} file from local directory or .config
+## Configure
 
 
 |Name|Default|Description|
@@ -45,6 +43,8 @@ They can get from ENV, as options of from jirastat.{json,yaml.toml} file from lo
 |JS_DAYS|30|How many days script should look in past|
 |JS_CUMILATIVE|yes|Cumulative output in task count|
 |JS_VERB|no|Put some debug information
+
+Also all this config variables can be storen in jirastat.{json,yaml,toml} file
 
 ## Example picture from Excel
 
